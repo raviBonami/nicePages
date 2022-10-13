@@ -35,14 +35,36 @@ function Editor() {
                 // 'grapesjs-preset-webpage' : {}     
             },
             blockManager:{
-                appendTo:'#blocks'
+                appendTo:'#block-container'
             },
-            // layerManager:{
-            //     appendTo: '#layer-container'
-            // },
+            layerManager:{
+                appendTo: '#layer-container'
+            },
+            traitManager:{
+                appendTo: "#trait-container"
+            },
+            selectorManager:{
+                appendTo: "#style-container"
+            },
             styleManager:{
-                appendTo:'#style-view'
+                appendTo:'#style-container',
+                // sectors: [{
+                //     name: "Dimension",
+                //     open: false,
+                //     buildProps: ["width", "min-height", "padding"],
+                //     properties: [{
+                //         type: "integer",
+                //         name: "The Width",
+                //         property: "width",
+                //         units: ["px", "%", "rem"],
+                //         defaults: 'auto',
+                //         min: 0,
+
+                //     }]
+                // }]
             },
+
+            // Device types
             deviceManager:{
                 devices: [
                     {
@@ -56,6 +78,8 @@ function Editor() {
                     }
             ]
             },
+
+            // top taskbar
             panels:{
                 defaults:[
                     {
@@ -95,10 +119,13 @@ function Editor() {
           
         })
 
+        // Desktop command 
         editor.Commands.add("set-device-desktop", {
             run: (editor) => editor.setDevice("Desktop")
         })
 
+
+        // Mobile command
         editor.Commands.add("set-device-mobile", {
             run: (editor) => editor.setDevice("Mobile")
         })
@@ -176,11 +203,11 @@ function Editor() {
                         <li className='nav-item' role="presentation" >
                             <button
                                 className='nav-link'
-                                id="trait-tab"
+                                id="layer-tab"
                                 data-bs-toggle="tab"
-                                data-bs-target="#trait"
-                                aria-selected='true'
-                                aria-controls='trait'
+                                data-bs-target="#layer"
+                                aria-selected='false'
+                                aria-controls='layer'
                             >
                                 <i className='fa fa-tasks' ></i>
                             </button>
@@ -191,8 +218,20 @@ function Editor() {
                                 id="style-tab"
                                 data-bs-toggle="tab"
                                 data-bs-target="#style"
-                                aria-selected='true'
+                                aria-selected='false'
                                 aria-controls='style'
+                            >
+                                <i className='fa fa-paint-brush' ></i>
+                            </button>
+                        </li>
+                        <li className='nav-item' role="presentation" >
+                            <button
+                                className='nav-link'
+                                id="trait-tab"
+                                data-bs-toggle="tab"
+                                data-bs-target="#trait"
+                                aria-selected='false'
+                                aria-controls='trait'
                             >
                                 <i className='fa fa-cog' ></i>
                             </button>
@@ -204,11 +243,11 @@ function Editor() {
                             id="block"
                             role="tabpanel"
                         >
-                            <div id="blocks" ></div>
+                            <div id="block-container" ></div>
                         </div>
                         <div
                             className='tab-pane fade'
-                            id="trait"
+                            id="layer"
                             role="tabpanel"
                         >
                             <div id="layer-container" ></div>
@@ -218,7 +257,14 @@ function Editor() {
                             id="style"
                             role="tabpanel"
                         >
-                            <div id="style-view" ></div>
+                            <div id="style-container" ></div>
+                        </div>
+                        <div
+                            className='tab-pane fade'
+                            id="trait"
+                            role="tabpanel"
+                        >
+                            <div id="trait-container" ></div>
                         </div>
                     </div>
                 </div>
@@ -231,7 +277,22 @@ function Editor() {
                     </div>
                 </nav>
                 <div id="ejs" >
-
+                    {/* <div 
+                        className='modal fade' 
+                        id='addPageModal' 
+                        tabIndex="-1" 
+                        aria-hidden="true" 
+                        data-bs-backdrop="static"
+                        data-bs-keyboard="false"
+                        >
+                            <div className='modal-dialog' >
+                                <div className='modal-content' >
+                                    <div className='modal-header' >
+                                        <h5 className='modal-title' >Create Page</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> */}
                 </div>
             </div>
         </>
