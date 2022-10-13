@@ -37,9 +37,9 @@ function Editor() {
             blockManager:{
                 appendTo:'#blocks'
             },
-            layerManager:{
-                appendTo: '#layer-container'
-            },
+            // layerManager:{
+            //     appendTo: '#layer-container'
+            // },
             styleManager:{
                 appendTo:'#style-view'
             },
@@ -66,7 +66,7 @@ function Editor() {
                                 id:"visibility",
                                 active:true,
                                 className:"btn-toggle-borders",
-                                label:"Visibility", //label:"<i class="bi bi-border" ></i>"
+                                label:"<i class ='fa fa-clone' ></i>", //label:"<i class="bi bi-border" ></i>"
                                 command: "sw-visibility"
                             }
                         ]
@@ -77,14 +77,14 @@ function Editor() {
                         buttons:[
                             {
                                 id:"device-desktop",
-                                label:"Laptop",     // label:"<i class="bi bi-laptop" ></i>
+                                label:"<i class='fa fa-television' ></i>",     // label:"<i class="bi bi-laptop" ></i>
                                 command:"set-device-desktop",
                                 active:true,
                                 togglable:false,
                             },
                             {
                                 id:"device-mobile",
-                                label:"Mobile",     // label:"<i class="bi bi-phone" ></i>
+                                label:"<i class='fa fa-mobile'></i>",     // label:"<i class="bi bi-phone" ></i>
                                 command:"set-device-mobile"
                             }
                         ]
@@ -94,6 +94,15 @@ function Editor() {
             },
           
         })
+
+        editor.Commands.add("set-device-desktop", {
+            run: (editor) => editor.setDevice("Desktop")
+        })
+
+        editor.Commands.add("set-device-mobile", {
+            run: (editor) => editor.setDevice("Mobile")
+        })
+
         setEditor(editor)
     }, [])
 
@@ -109,29 +118,43 @@ function Editor() {
                 </nav>
                 <div className='my-2 d-flex flex-column' >
                     <button className="btn btn-outline-secondary mx-5 btn-sm " >
-                        <i className="bi bi-file-earmark-plus"></i>
+                        <i className="fa fa-plus"></i>
                         Add Page
                     </button>
                     <ul className='list-group pages' >
-                        <li className='list-group-item d-flex justify-content-between' >
+                        <li className='list-group-item d-flex justify-content-between align-items-center ' >
                             Home
                             <div className='m-2'>
-                                <i className='bi bi-pencil-fill' ></i>
-                                <i className='bi bi-trash' ></i>
+                                <button className='btn btn-sm btn-outline-primary' >
+                                    <i className='fa fa-pencil' ></i>
+                                </button>
+                                <button className='btn btn-sm btn-outline-primary' >
+                                    <i className='fa fa-trash' ></i>
+                                </button>
+                                
+                                
                             </div>
                         </li>
-                        <li className='list-group-item d-flex justify-content-between' >
-                            About US
+                        <li className='list-group-item d-flex justify-content-between align-items-center' >
+                            About
                             <div className='m-2'>
-                                <i className='bi bi-pencil-fill' ></i>
-                                <i className='bi bi-trash' ></i>
+                            <button className='btn btn-sm btn-outline-primary' >
+                                    <i className='fa fa-pencil' ></i>
+                                </button>
+                                <button className='btn btn-sm btn-outline-primary' >
+                                    <i className='fa fa-trash' ></i>
+                                </button>
                             </div>
                         </li>
-                        <li className='list-group-item d-flex justify-content-between' >
-                            Contact US
+                        <li className='list-group-item d-flex justify-content-between align-items-center' >
+                            Contact Us
                             <div className='m-2'>
-                                <i className='bi bi-pencil-fill' ></i>
-                                <i className='bi bi-trash' ></i>
+                            <button className='btn btn-sm btn-outline-primary' >
+                                    <i className='fa fa-pencil' ></i>
+                                </button>
+                                <button className='btn btn-sm btn-outline-primary' >
+                                    <i className='fa fa-trash' ></i>
+                                </button>
                             </div>
                         </li>
                     </ul>
@@ -147,7 +170,7 @@ function Editor() {
                                 aria-selected='true'
                                 aria-controls='block'
                             >
-                                <i className='bi bi-grid-fill' ></i>
+                                <i className='fa fa-cubes' ></i>
                             </button>
                         </li>
                         <li className='nav-item' role="presentation" >
@@ -159,7 +182,7 @@ function Editor() {
                                 aria-selected='true'
                                 aria-controls='trait'
                             >
-                                <i className='bi bi-layers-fill' ></i>
+                                <i className='fa fa-tasks' ></i>
                             </button>
                         </li>
                         <li className='nav-item' role="presentation" >
@@ -171,7 +194,7 @@ function Editor() {
                                 aria-selected='true'
                                 aria-controls='style'
                             >
-                                <i className='bi bi-palette-fill' ></i>
+                                <i className='fa fa-cog' ></i>
                             </button>
                         </li>
                     </ul>

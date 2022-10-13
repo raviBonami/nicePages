@@ -47,8 +47,8 @@ html{
 
   .pages {
     height: 100px;
-    // overflow: scroll;  
-    // overflow-x: hidden;
+    overflow: scroll;  
+    overflow-x: hidden;  
   }
 
   .nav{
@@ -91,6 +91,10 @@ html{
 .gjs-four-color, .gjs-four-color-h:hover{
   color: #1e8fe1;
   // color: rgb(161, 58, 70);
+}
+
+.gjs-pn-btn{
+  border: 1px solid rgb(202,72,87);
 }
 
 .bi{
