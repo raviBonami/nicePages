@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useLayoutEffect } from 'react'
 import grapesjs from 'grapesjs';
 import 'grapesjs/dist/css/grapes.min.css';
 import './editor.scss'
@@ -19,12 +19,27 @@ import Popper from 'popper.js';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 import { Button } from 'bootstrap'
 import projectManager from 'grapesjs-project-manager'
+// import { pages } from '../pages/pages'
 // import {AiFillFileAdd} from 'react-bootstrap-icons'
 // import { AiFillFileAdd } from 'react-icons/fa';
 
 function Editor() {
     const [editor, setEditor] = useState(null);
+    const [pageManager, setPageManager] = useState(null)
+    const [myPages, setMyPages] = useState([{
+        id: 1,
+        styles: "",
+        components: "<h1>Hello from page 1</h1>",
+        title:"Page 1"
+    }])
+    const [currentPage, setCurrentPage] = useState(1)
+
+    // useLayoutEffect(() => {
+    //     setMyPages(pages)
+    // })
+
     useEffect(() => {
+        // setMyPages(pages);
         const editor = grapesjs.init({
             container: '#ejs',
             fromElement: true,
@@ -39,7 +54,7 @@ function Editor() {
             },
             storageManager: {
                 type: 'local',
-                autosave: true,
+                autosave: false,
                 autoload: true,
                 stepsBeforeSave: 5,
                 id: "my-",
@@ -103,18 +118,7 @@ function Editor() {
             },
 
             pageManager: {
-                pages: [
-                    {
-                      id: 'page-id',
-                      styles: `.my-class { color: red }`, // or a JSON of styles
-                      component: '<div class="my-class">My element</div>', // or a JSON of components
-                    },
-                    {
-                        id: "page2",
-                        styles: `.my-class { color: red }`,
-                        component: '<div class="my-class">My body</div>'
-                    }
-                 ]
+                pages: myPages
             },
 
             // top taskbar
@@ -244,21 +248,8 @@ function Editor() {
 
         editor.Commands.add("save", {
             run: (editor) => {
-                // const data = editor.getProjectData()
-                // const dataa = JSON.stringify(data)
-                // console.log(editor.getHtml(), "save button");
-                // console.log(html, "stringify data --------------------------");
-                // console.log(
-                //   JSON.parse(html),
-                //   "parse data +++++++++++++++++++++++++++++++++"
-                // );
                 const data = JSON.stringify([editor.getHtml(), editor.getCss()]);
                 localStorage.setItem("page1", data);
-                // console.log(data);
-                // console.log(
-                //   JSON.parse(localStorage.getItem("page1"))[0],
-                //   "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
-                // );
             },
         });
 
@@ -274,31 +265,75 @@ function Editor() {
                     JSON.parse(localStorage.getItem("page1"))[1],
                     "++++++++++++++++++++++++++++++++++++++++++++++++++++++++++"
                 );
-                // let html = editor.getHtml(newData[0]);
-                // console.log(typeof newData[0], "=====================", newData[0]);
-                // console.log(html, "html =========================");
-                // let css = editor.getCss(newData[1]);
-                // const html = editor.getHtml({ newData })
-                // const css = editor.getCss({ newData })
-                // html = JSON.parse(html);
-                // css = JSON.parse(css);
                 editor.setComponents(JSON.parse(localStorage.getItem("page1"))[0]);
                 // editor.setStyle("h1{color:'red'}");
                 editor.setStyle(JSON.parse(localStorage.getItem("page1"))[1]);
-                // editor.setComponents(html);
-                // editor.setStyle(css);
-                // const dataToBeRendered = await editor.StorageManager.load(newData)
-                // editor.load(newData)
             },
         });
 
+        editor.DomComponents.addType('select',{
+            isComponent: () => false,
+        })
 
         setEditor(editor)
+        setPageManager(editor.Pages);
+        // console.log(myPages);    empty array
+        setMyPages(myPages)
+        // console.log(myPages);    empty array
     }, [])
 
-    // const projectData = editor.getProjectData();
-    // console.log(projectData)
 
+    const renderPage = (page) => {
+        localStorage.setItem(currentPage,JSON.stringify([editor.getHtml(), editor.getCss()]));
+        setCurrentPage(page.id);
+        // console.log(page);
+        const pageComponents = localStorage.getItem(page.id)
+        console.log(JSON.parse(pageComponents)[0], "==========++++++++++++++");
+        editor.setComponents(JSON.parse(pageComponents)[0]);
+        editor.setStyle(JSON.parse(pageComponents)[1]);
+        // editor.setComponents(JSON.parse(pageComponents[0]));
+        // if (pageComponents !== undefined) {
+        //     editor.setComponents(JSON.parse(pageComponents[0]));
+        // } else {
+        //     editor.setComponents("");
+        // }
+
+
+        // myPages.forEach((page) => {
+        //     if (page.id === currentPage) {
+
+        //         localStorage.setItem(currentPage , JSON.stringify([editor.getHtml(), editor.getCss()]))
+        //     }
+        // })
+
+       
+    }
+
+    const deletePage = (pageid) => {
+        pageManager.removePage(pageid);
+    }
+
+    const addPage = () => {
+        localStorage.setItem(currentPage,JSON.stringify([editor.getHtml(), editor.getCss()]))
+        const newId = myPages.length + 1;
+        const newPage = {
+            id: newId,
+            styles: "",
+            components: `<h1>New Page added ${myPages.length + 1}</h1>`,
+            title: `Page ${myPages.length + 1}`
+        }
+        // console.log(newPage, "-----------------")   
+        // console.log(newArray, "before -----------")
+        const newArray = [...myPages, newPage]
+        setMyPages(newArray);
+
+        // Setting page id as current page when one page is added
+        setCurrentPage(newId);
+        
+        // console.log(newArray, "after -----------")
+        editor.setComponents(newPage.components);
+        editor.setStyle(newPage.styles);
+    }
 
 
     const validateForm = (event) => {
@@ -341,12 +376,29 @@ function Editor() {
                     </div>
                 </nav>
                 <div className='my-2 d-flex flex-column' id='page-manager' >
-                    <button className="btn btn-outline-secondary mx-5 btn-sm " >
+                    <button className="btn btn-outline-secondary mx-5 btn-sm " onClick={addPage} >
                         <i className="fa fa-plus"></i>
                         Add Page
                     </button>
                     <ul className='list-group pages' >
-                        <li className='list-group-item d-flex justify-content-between align-items-center ' >
+                        {myPages.length > 0 && myPages.map((page) => {
+                            return (
+                                <li className='list-group-item d-flex justify-content-between align-items-center ' >
+                                    {page.title}
+                                    <div className='m-2'>
+                                        <button className='btn btn-sm btn-outline-primary' onClick={() => renderPage(page)} >
+                                            <i className='fa fa-pencil' ></i>
+                                        </button>
+                                        <button className='btn btn-sm btn-outline-primary' onClick={() => deletePage(page.id)} >
+                                            <i className='fa fa-trash' ></i>
+                                        </button>
+
+
+                                    </div>
+                                </li>
+                            )
+                        })}
+                        {/* <li className='list-group-item d-flex justify-content-between align-items-center ' >
                             Home
                             <div className='m-2'>
                                 <button className='btn btn-sm btn-outline-primary' >
@@ -380,7 +432,7 @@ function Editor() {
                                     <i className='fa fa-trash' ></i>
                                 </button>
                             </div>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
                 <div>
